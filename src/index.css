@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,12 +47,12 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom calculator colors */
-    --calc-primary: 152 76% 64%;
-    --calc-primary-dark: 152 76% 54%;
-    --calc-secondary: 152 30% 45%;
-    --calc-button: 152 20% 85%;
-    --calc-button-hover: 152 25% 80%;
+    /* Custom calculator colors - darker green */
+    --calc-primary: 152 76% 54%;
+    --calc-primary-dark: 152 76% 44%;
+    --calc-secondary: 152 30% 35%;
+    --calc-button: 152 20% 75%;
+    --calc-button-hover: 152 25% 70%;
   }
 
   .dark {
