@@ -45,6 +45,28 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     setOperation(nextOperation);
   };
 
+  const inputParentheses = () => {
+    const currentFormula = formula || display;
+    const openParenCount = (currentFormula.match(/\(/g) || []).length;
+    const closeParenCount = (currentFormula.match(/\)/g) || []).length;
+    
+    if (openParenCount > closeParenCount) {
+      // There are unclosed parentheses, add closing parenthesis
+      setFormula(currentFormula + ')');
+      setDisplay(display + ')');
+    } else {
+      // No unclosed parentheses, add opening parenthesis
+      if (waitingForOperand || display === '0') {
+        setDisplay('(');
+        setFormula((formula || '') + '(');
+      } else {
+        setDisplay(display + '(');
+        setFormula(currentFormula + '(');
+      }
+      setWaitingForOperand(true);
+    }
+  };
+
   const performCalculation = () => {
     const prev = previousValue || 0;
     const current = parseFloat(display);
@@ -151,6 +173,14 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     );
   };
 
+  const getParenthesesButtonText = () => {
+    const currentFormula = formula || display;
+    const openParenCount = (currentFormula.match(/\(/g) || []).length;
+    const closeParenCount = (currentFormula.match(/\)/g) || []).length;
+    
+    return openParenCount > closeParenCount ? ')' : '(';
+  };
+
   return (
     <div 
       className="min-h-screen flex flex-col relative"
@@ -216,7 +246,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
           {/* Row 1 */}
           <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
           <Button onClick={inputDecimal} variant="operator" className="h-16">.</Button>
-          <Button onClick={() => inputOperation('(')} variant="operator" className="h-16">(</Button>
+          <Button onClick={inputParentheses} variant="operator" className="h-16">( )</Button>
           <Button onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
 
           {/* Row 2 */}
@@ -239,7 +269,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
 
           {/* Row 5 */}
           <Button onClick={clear} variant="clear" className="h-16">
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-6 h-6" />
           </Button>
           <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
           <Button 

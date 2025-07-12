@@ -1,73 +1,231 @@
-# Welcome to your Lovable project
 
-## Project info
+# Finance Calculator Web App
 
-**URL**: https://lovable.dev/projects/de38363b-9893-4e4a-97de-7a41242ad091
+A modern, responsive finance calculator web application built with React, TypeScript, and Tailwind CSS. The app features a beautiful mobile-first design with customizable themes and advanced calculation capabilities.
 
-## How can I edit this code?
+![Finance Calculator Screenshot](https://via.placeholder.com/400x600?text=Finance+Calculator+Screenshot)
 
-There are several ways of editing your application.
+## 🚀 Features
 
-**Use Lovable**
+### Core Calculator Functions
+- **Basic Operations**: Addition (+), Subtraction (−), Multiplication (*), Division (/)
+- **Advanced Functions**: Parentheses grouping, percentage calculations, decimal support
+- **Smart Parentheses**: Intelligent parentheses handling that automatically switches between opening "(" and closing ")" based on context
+- **Percentage Quick Actions**: One-tap percentage calculations (25%, 50%, 75%, 100%) based on your balance
+- **Real-time Formula Display**: Shows the current calculation formula above the result
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/de38363b-9893-4e4a-97de-7a41242ad091) and start prompting.
+### User Interface
+- **Mobile-First Design**: Optimized for mobile devices with responsive desktop support
+- **Beautiful Green Gradient**: Custom green gradient background matching modern finance app aesthetics
+- **Customizable Themes**: Built-in color picker with preset color options and reset functionality
+- **Touch-Friendly Buttons**: Large, well-spaced buttons with visual feedback and shadows
+- **Clear Visual Hierarchy**: Different button styles for numbers, operators, and special functions
 
-Changes made via Lovable will be committed automatically to this repo.
+### Navigation & UX
+- **Dummy Landing Page**: Professional starting page with app navigation
+- **Seamless Navigation**: Smooth transitions between landing page and calculator
+- **Balance Display**: Shows your available balance below the calculation result
+- **Responsive Layout**: Maintains perfect proportions across all screen sizes
 
-**Use your preferred IDE**
+## 🛠️ Technology Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Frontend Framework**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Shadcn/ui component library
+- **Icons**: Lucide React icon library
+- **Routing**: React Router DOM for navigation
+- **Build Tool**: Vite for fast development and building
+- **Mobile Support**: Capacitor for iOS/Android deployment
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📱 Mobile Deployment
 
-Follow these steps:
+This app is configured for mobile deployment using Capacitor:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+- **iOS Support**: Ready for App Store deployment
+- **Android Support**: Ready for Google Play Store deployment
+- **Native Features**: Camera, storage, and device API access
+- **Offline Capability**: Works without internet connection
+
+## 🎨 Design System
+
+The app follows a carefully crafted design system:
+
+- **Primary Colors**: Custom green gradient (`hsl(152, 76%, 36%)`)
+- **Accent Colors**: White overlays with backdrop blur effects
+- **Typography**: Clean, modern font hierarchy
+- **Spacing**: Consistent 16px grid system
+- **Shadows**: Subtle depth with modern shadow effects
+
+## 🔧 Installation & Setup
+
+### Prerequisites
+- Node.js (version 16 or higher)
+- npm or yarn package manager
+
+### Quick Start
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Development
+```bash
+# Run in development mode with hot reload
+npm run dev
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+# Build for production
+npm run build
 
-**Use GitHub Codespaces**
+# Preview production build
+npm run preview
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Mobile Development
+```bash
+# Install Capacitor CLI globally
+npm install -g @capacitor/cli
 
-## What technologies are used for this project?
+# Build the web app
+npm run build
 
-This project is built with:
+# Add mobile platforms
+npx cap add ios
+npx cap add android
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Sync changes to mobile platforms
+npx cap sync
 
-## How can I deploy this project?
+# Open in native IDEs
+npx cap open ios
+npx cap open android
+```
 
-Simply open [Lovable](https://lovable.dev/projects/de38363b-9893-4e4a-97de-7a41242ad091) and click on Share -> Publish.
+## 🏗️ Project Structure
 
-## Can I connect a custom domain to my Lovable project?
+```
+src/
+├── components/           # Reusable UI components
+│   ├── Calculator.tsx   # Main calculator component
+│   ├── ColorPicker.tsx  # Theme customization component
+│   └── ui/             # Shadcn/ui components
+├── pages/              # Application pages
+│   ├── Home.tsx        # Landing page
+│   └── Index.tsx       # Main app entry
+├── lib/                # Utility functions
+├── hooks/              # Custom React hooks
+└── index.css          # Global styles and design tokens
+```
 
-Yes, you can!
+## 🎯 Key Components
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Calculator Component
+The main calculator component (`src/components/Calculator.tsx`) includes:
+- State management for calculations and display
+- Smart parentheses handling logic
+- Percentage calculation functions
+- Theme customization integration
+- Responsive button grid layout
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Color Picker Component
+Theme customization component (`src/components/ColorPicker.tsx`) featuring:
+- Preset color palette
+- Real-time background updates
+- Reset to original theme option
+- Smooth dropdown animations
+
+### Home Page
+Landing page (`src/pages/Home.tsx`) with:
+- Professional app branding
+- Clear call-to-action button
+- Smooth navigation to calculator
+
+## 🚀 Deployment Options
+
+### Web Deployment (Lovable Platform)
+1. Click the "Publish" button in Lovable
+2. Your app will be deployed to `yourapp.lovable.app`
+3. Optionally connect a custom domain in Project Settings
+
+### Mobile App Deployment
+1. Build the web app: `npm run build`
+2. Sync with mobile platforms: `npx cap sync`
+3. Open in Xcode (iOS) or Android Studio
+4. Build and publish to respective app stores
+
+### Custom Hosting
+Deploy the built files to any static hosting service:
+- Vercel
+- Netlify
+- AWS S3 + CloudFront
+- GitHub Pages
+
+## 🎨 Customization
+
+### Changing Colors
+Modify the color system in `src/index.css`:
+```css
+:root {
+  --primary: your-color-here;
+  --secondary: your-color-here;
+}
+```
+
+### Adding New Functions
+Extend the calculator by adding new operations in `Calculator.tsx`:
+```typescript
+const performCalculation = () => {
+  // Add your custom calculation logic here
+};
+```
+
+### Modifying Layout
+Adjust the button grid or add new buttons in the Calculator component's JSX section.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 💡 Usage Tips
+
+### Smart Parentheses
+- Press the "( )" button to add opening parentheses
+- Press again to automatically add closing parentheses when needed
+- The button intelligently switches between "(" and ")" based on context
+
+### Percentage Calculations
+- Use the top row buttons (25%, 50%, 75%, 100%) for quick percentage calculations
+- Results are calculated based on your displayed balance
+- Perfect for calculating tips, discounts, or investment percentages
+
+### Theme Customization
+- Tap the settings gear icon (top-right) to access color options
+- Choose from preset colors or reset to the original green theme
+- Changes apply instantly across the entire app
+
+## 📞 Support
+
+For questions, issues, or feature requests:
+- Open an issue on GitHub
+- Contact the development team
+- Check the documentation for troubleshooting tips
+
+---
+
+**Built with ❤️ using React, TypeScript, and Tailwind CSS**
