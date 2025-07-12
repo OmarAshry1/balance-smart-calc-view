@@ -204,7 +204,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
           className="p-2 relative"
           onClick={() => setShowColorPicker(!showColorPicker)}
         >
-          <Settings className="w-6 h-6 text-white fill-white" />
+          <Settings className="w-6 h-6 text-white" />
         </button>
       </div>
 
