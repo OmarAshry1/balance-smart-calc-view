@@ -164,7 +164,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     if (variant === 'clear') {
       buttonStyle = { backgroundColor: '#070738' };
     } else if (variant === 'number') {
-      buttonStyle = { backgroundColor: '#ffffff73' };
+      buttonStyle = { backgroundColor: '#ffffff65' };
     }
 
     return (
