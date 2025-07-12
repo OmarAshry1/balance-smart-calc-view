@@ -87,6 +87,9 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   const calculate = () => {
+    setButtonPressed('equals');
+    setTimeout(() => setButtonPressed(null), 150);
+    
     const inputValue = parseFloat(display);
 
     if (previousValue !== null && operation) {
@@ -105,6 +108,9 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   const clear = () => {
+    setButtonPressed('clear');
+    setTimeout(() => setButtonPressed(null), 150);
+    
     if (display !== '0') {
       setDisplay('0');
     } else {
@@ -126,6 +132,9 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   const applyPercentage = (percent: number) => {
+    setButtonPressed(`percent-${percent}`);
+    setTimeout(() => setButtonPressed(null), 150);
+    
     const result = (balance * percent) / 100;
     setDisplay(String(result));
     setFormula(`${percent}% of $${balance.toLocaleString()}`);
@@ -156,8 +165,12 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     onClick: () => void;
     className?: string;
     variant?: 'number' | 'operator' | 'equals' | 'percentage' | 'clear';
+    id?: string;
   }> = ({ children, onClick, className = '', variant = 'number' }) => {
-    const baseClasses = "rounded-2xl text-2xl font-sf-pro transition-all duration-200 active:scale-95 font-medium";
+    const isPressed = buttonPressed === id;
+    const baseClasses = `rounded-2xl text-2xl font-sf-pro transition-all duration-150 font-medium ${
+      isPressed ? 'scale-95 brightness-90' : 'hover:scale-105 active:scale-95'
+    }`;
     const variantClasses = {
       number: "text-white font-sf-pro",
       operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white font-sf-pro",
@@ -175,31 +188,23 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
 
     return (
       <button
-        onClick={onClick}
-        className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-        style={buttonStyle}
-      >
-        {children}
-      </button>
-    );
-  };
-
-  const GearIcon = () => (
-    <svg 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-6 h-6"
-    >
-      {/* Simple 8-tooth gear */}
-      <path 
-        d="M12 2L13.5 4.5L16 3L16.5 6L19.5 6.5L18 9L21 10.5L19.5 12L21 13.5L18 15L19.5 17.5L16.5 18L16 21L13.5 19.5L12 22L10.5 19.5L8 21L7.5 18L4.5 17.5L6 15L3 13.5L4.5 12L3 10.5L6 9L4.5 6.5L7.5 6L8 3L10.5 4.5L12 2Z" 
-        fill="white"
-      />
+    setButtonPressed(`op-${nextOperation}`);
+      {/* 8-tooth gear shape */}
+      <g fill="white">
+        {/* Main gear body */}
+        <circle cx="12" cy="12" r="8" />
+        {/* 8 teeth around the gear */}
+        <rect x="11" y="2" width="2" height="3" />
+        <rect x="11" y="19" width="2" height="3" />
+        <rect x="2" y="11" width="3" height="2" />
+        <rect x="19" y="11" width="3" height="2" />
+        <rect x="16.5" y="4.5" width="2" height="2" transform="rotate(45 17.5 5.5)" />
+        <rect x="5.5" y="4.5" width="2" height="2" transform="rotate(-45 6.5 5.5)" />
+        <rect x="16.5" y="17.5" width="2" height="2" transform="rotate(-45 17.5 18.5)" />
+        <rect x="5.5" y="17.5" width="2" height="2" transform="rotate(45 6.5 18.5)" />
+      </g>
       {/* Center hole */}
-      <circle cx="12" cy="12" r="4" fill="none" stroke={bgColor} strokeWidth="8"/>
+      <circle cx="12" cy="12" r="3" fill={bgColor} />
     </svg>
   );
 
@@ -226,21 +231,29 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         </button>
         <h1 className="text-white text-xl font-medium">Calculate</h1>
         <button 
-          className="p-2 relative"
-          onClick={() => setShowColorPicker(!showColorPicker)}
+          className={`p-2 relative transition-all duration-200 rounded-full ${
+            gearPressed ? 'scale-90 bg-white/20' : 'hover:scale-110 active:scale-90'
+          }`}
+          onClick={() => {
+            setGearPressed(true);
+            setTimeout(() => setGearPressed(false), 150);
+            setShowColorPicker(!showColorPicker);
+          }}
         >
           <GearIcon />
         </button>
       </div>
 
       {/* Color Picker Dropdown */}
-      {showColorPicker && (
+      <div className={`transition-all duration-300 ${
+        showColorPicker ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+      }`}>
         <ColorPicker
           onColorSelect={handleColorSelect}
           onReset={resetToOriginal}
           onClose={() => setShowColorPicker(false)}
         />
-      )}
+      </div>
 
       {/* Calculator Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-sm mx-auto w-full">
@@ -262,6 +275,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
           {[25, 50, 75, 100].map((percent) => (
             <Button
               key={percent}
+              id={`percent-${percent}`}
               onClick={() => applyPercentage(percent)}
               className="h-12 text-lg"
               variant="percentage"
@@ -274,35 +288,36 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         {/* Calculator Grid */}
         <div className="grid grid-cols-4 gap-2 w-full">
           {/* Row 1 */}
-          <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
-          <Button onClick={inputDecimal} variant="operator" className="h-16">.</Button>
-          <Button onClick={inputParentheses} variant="operator" className="h-16">( )</Button>
-          <Button onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
+          <Button id="op-/" onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
+          <Button id="decimal" onClick={inputDecimal} variant="operator" className="h-16">.</Button>
+          <Button id="parentheses" onClick={inputParentheses} variant="operator" className="h-16">( )</Button>
+          <Button id="op-%" onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
 
           {/* Row 2 */}
-          <Button onClick={() => inputOperation('*')} variant="operator" className="h-16">*</Button>
-          <Button onClick={() => inputNumber('1')} variant="number" className="h-16">1</Button>
-          <Button onClick={() => inputNumber('2')} variant="number" className="h-16">2</Button>
-          <Button onClick={() => inputNumber('3')} variant="number" className="h-16">3</Button>
+          <Button id="op-*" onClick={() => inputOperation('*')} variant="operator" className="h-16">*</Button>
+          <Button id="num-1" onClick={() => inputNumber('1')} variant="number" className="h-16">1</Button>
+          <Button id="num-2" onClick={() => inputNumber('2')} variant="number" className="h-16">2</Button>
+          <Button id="num-3" onClick={() => inputNumber('3')} variant="number" className="h-16">3</Button>
 
           {/* Row 3 */}
-          <Button onClick={() => inputOperation('+')} variant="operator" className="h-16">+</Button>
-          <Button onClick={() => inputNumber('4')} variant="number" className="h-16">4</Button>
-          <Button onClick={() => inputNumber('5')} variant="number" className="h-16">5</Button>
-          <Button onClick={() => inputNumber('6')} variant="number" className="h-16">6</Button>
+          <Button id="op-+" onClick={() => inputOperation('+')} variant="operator" className="h-16">+</Button>
+          <Button id="num-4" onClick={() => inputNumber('4')} variant="number" className="h-16">4</Button>
+          <Button id="num-5" onClick={() => inputNumber('5')} variant="number" className="h-16">5</Button>
+          <Button id="num-6" onClick={() => inputNumber('6')} variant="number" className="h-16">6</Button>
 
           {/* Row 4 */}
-          <Button onClick={() => inputOperation('−')} variant="operator" className="h-16">−</Button>
-          <Button onClick={() => inputNumber('7')} variant="number" className="h-16">7</Button>
-          <Button onClick={() => inputNumber('8')} variant="number" className="h-16">8</Button>
-          <Button onClick={() => inputNumber('9')} variant="number" className="h-16">9</Button>
+          <Button id="op-−" onClick={() => inputOperation('−')} variant="operator" className="h-16">−</Button>
+          <Button id="num-7" onClick={() => inputNumber('7')} variant="number" className="h-16">7</Button>
+          <Button id="num-8" onClick={() => inputNumber('8')} variant="number" className="h-16">8</Button>
+          <Button id="num-9" onClick={() => inputNumber('9')} variant="number" className="h-16">9</Button>
 
           {/* Row 5 */}
-          <Button onClick={clear} variant="clear" className="h-16">
+          <Button id="clear" onClick={clear} variant="clear" className="h-16">
             <ChevronLeft className="w-8 h-8" />
           </Button>
-          <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
+          <Button id="num-0" onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
           <Button 
+            id="equals"
             onClick={calculate} 
             variant="equals"
             className="h-16 col-span-2"
