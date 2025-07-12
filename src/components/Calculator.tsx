@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Settings } from 'lucide-react';
+import { ArrowLeft, Settings, Undo2 } from 'lucide-react';
+import { ColorPicker } from './ColorPicker';
 
 interface CalculatorProps {
   balance?: number;
@@ -8,10 +9,12 @@ interface CalculatorProps {
 
 const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   const [display, setDisplay] = useState('0');
+  const [formula, setFormula] = useState('');
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
-  const [calculation, setCalculation] = useState('');
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [bgColor, setBgColor] = useState('hsl(152, 76%, 36%)');
 
   const inputNumber = (num: string) => {
     if (waitingForOperand) {
@@ -27,14 +30,14 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
 
     if (previousValue === null) {
       setPreviousValue(inputValue);
-      setCalculation(`${inputValue} ${nextOperation}`);
+      setFormula(`${inputValue} ${nextOperation}`);
     } else if (operation) {
       const currentValue = previousValue || 0;
       const newValue = performCalculation();
 
       setDisplay(String(newValue));
       setPreviousValue(newValue);
-      setCalculation(`${newValue} ${nextOperation}`);
+      setFormula(`${newValue} ${nextOperation}`);
     }
 
     setWaitingForOperand(true);
@@ -50,9 +53,9 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         return prev + current;
       case '−':
         return prev - current;
-      case '×':
+      case '*':
         return prev * current;
-      case '÷':
+      case '/':
         return current !== 0 ? prev / current : 0;
       default:
         return current;
@@ -65,7 +68,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     if (previousValue !== null && operation) {
       const newValue = performCalculation();
       setDisplay(String(newValue));
-      setCalculation(`${previousValue} ${operation} ${inputValue} =`);
+      setFormula(`${previousValue} ${operation} ${inputValue} =`);
       setPreviousValue(null);
       setOperation(null);
       setWaitingForOperand(true);
@@ -73,11 +76,15 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   const clear = () => {
-    setDisplay('0');
-    setPreviousValue(null);
-    setOperation(null);
-    setWaitingForOperand(false);
-    setCalculation('');
+    if (display !== '0') {
+      setDisplay('0');
+    } else {
+      setDisplay('0');
+      setPreviousValue(null);
+      setOperation(null);
+      setWaitingForOperand(false);
+      setFormula('');
+    }
   };
 
   const inputDecimal = () => {
@@ -92,7 +99,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   const applyPercentage = (percent: number) => {
     const result = (balance * percent) / 100;
     setDisplay(String(result));
-    setCalculation(`${percent}% of $${balance.toLocaleString()}`);
+    setFormula(`${percent}% of $${balance.toLocaleString()}`);
     setWaitingForOperand(true);
   };
 
@@ -105,17 +112,28 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     });
   };
 
+  const handleColorSelect = (color: string) => {
+    setBgColor(color);
+    setShowColorPicker(false);
+  };
+
+  const resetToOriginal = () => {
+    setBgColor('hsl(152, 76%, 36%)');
+    setShowColorPicker(false);
+  };
+
   const Button: React.FC<{
     children: React.ReactNode;
     onClick: () => void;
     className?: string;
-    variant?: 'default' | 'operator' | 'equals';
-  }> = ({ children, onClick, className = '', variant = 'default' }) => {
-    const baseClasses = "calc-button rounded-xl text-lg font-medium transition-all duration-200 active:scale-95";
+    variant?: 'number' | 'operator' | 'equals' | 'percentage';
+  }> = ({ children, onClick, className = '', variant = 'number' }) => {
+    const baseClasses = "rounded-2xl text-xl font-medium transition-all duration-200 active:scale-95 shadow-lg";
     const variantClasses = {
-      default: "text-white",
-      operator: "text-white",
-      equals: "bg-white text-gray-800 shadow-lg"
+      number: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30",
+      operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white hover:bg-white/25",
+      equals: "bg-white text-gray-800 shadow-xl hover:bg-gray-100",
+      percentage: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
     };
 
     return (
@@ -129,40 +147,56 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   return (
-    <div className="calc-gradient min-h-screen flex flex-col">
+    <div 
+      className="min-h-screen flex flex-col relative"
+      style={{ background: `linear-gradient(135deg, ${bgColor}, ${bgColor.replace('36%', '28%')})` }}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12">
+      <div className="flex items-center justify-between p-4 pt-12 relative z-10">
         <button className="p-2">
           <ArrowLeft className="w-6 h-6 text-white" />
         </button>
         <h1 className="text-white text-xl font-medium">Calculate</h1>
-        <button className="p-2">
+        <button 
+          className="p-2 relative"
+          onClick={() => setShowColorPicker(!showColorPicker)}
+        >
           <Settings className="w-6 h-6 text-white" />
         </button>
       </div>
 
-      {/* Display Area */}
-      <div className="flex-1 px-6 py-8">
-        <div className="text-white text-right mb-4">
-          <div className="text-lg opacity-75 min-h-[24px]">
-            {calculation}
+      {/* Color Picker Dropdown */}
+      {showColorPicker && (
+        <ColorPicker
+          onColorSelect={handleColorSelect}
+          onReset={resetToOriginal}
+          onClose={() => setShowColorPicker(false)}
+        />
+      )}
+
+      {/* Calculator Content */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-sm mx-auto w-full">
+        {/* Display Area */}
+        <div className="text-white text-center mb-8 w-full">
+          <div className="text-lg opacity-75 min-h-[24px] mb-2">
+            {formula}
           </div>
-          <div className="text-5xl font-light leading-tight">
+          <div className="text-6xl font-light leading-tight mb-4">
             {formatDisplay(display)}
           </div>
-        </div>
-
-        <div className="text-white text-center opacity-75 text-sm mt-8">
-          Your balance: ${balance.toLocaleString()} (available)
+          <div className="text-sm opacity-75">
+            Your balance: ${balance.toLocaleString()} (available)
+          </div>
         </div>
 
         {/* Percentage Buttons */}
-        <div className="grid grid-cols-4 gap-3 mt-8 mb-6">
+        <div className="grid grid-cols-4 gap-3 mb-6 w-full">
           {[25, 50, 75, 100].map((percent) => (
             <Button
               key={percent}
               onClick={() => applyPercentage(percent)}
               className="h-12"
+              variant="percentage"
             >
               {percent}%
             </Button>
@@ -170,34 +204,36 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         </div>
 
         {/* Calculator Grid */}
-        <div className="grid grid-cols-4 gap-3 max-w-sm mx-auto">
+        <div className="grid grid-cols-4 gap-3 w-full">
           {/* Row 1 */}
-          <Button onClick={() => inputOperation('÷')} className="h-16">÷</Button>
-          <Button onClick={inputDecimal} className="h-16">.</Button>
-          <Button onClick={() => inputOperation('(')} className="h-16">(</Button>
-          <Button onClick={() => inputOperation('%')} className="h-16">%</Button>
+          <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
+          <Button onClick={inputDecimal} variant="number" className="h-16">.</Button>
+          <Button onClick={() => inputOperation('(')} variant="operator" className="h-16">(</Button>
+          <Button onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
 
           {/* Row 2 */}
-          <Button onClick={() => inputOperation('×')} className="h-16">×</Button>
-          <Button onClick={() => inputNumber('1')} className="h-16">1</Button>
-          <Button onClick={() => inputNumber('2')} className="h-16">2</Button>
-          <Button onClick={() => inputNumber('3')} className="h-16">3</Button>
+          <Button onClick={() => inputOperation('*')} variant="operator" className="h-16">*</Button>
+          <Button onClick={() => inputNumber('1')} variant="number" className="h-16">1</Button>
+          <Button onClick={() => inputNumber('2')} variant="number" className="h-16">2</Button>
+          <Button onClick={() => inputNumber('3')} variant="number" className="h-16">3</Button>
 
           {/* Row 3 */}
-          <Button onClick={() => inputOperation('+')} className="h-16">+</Button>
-          <Button onClick={() => inputNumber('4')} className="h-16">4</Button>
-          <Button onClick={() => inputNumber('5')} className="h-16">5</Button>
-          <Button onClick={() => inputNumber('6')} className="h-16">6</Button>
+          <Button onClick={() => inputOperation('+')} variant="operator" className="h-16">+</Button>
+          <Button onClick={() => inputNumber('4')} variant="number" className="h-16">4</Button>
+          <Button onClick={() => inputNumber('5')} variant="number" className="h-16">5</Button>
+          <Button onClick={() => inputNumber('6')} variant="number" className="h-16">6</Button>
 
           {/* Row 4 */}
-          <Button onClick={() => inputOperation('−')} className="h-16">−</Button>
-          <Button onClick={() => inputNumber('7')} className="h-16">7</Button>
-          <Button onClick={() => inputNumber('8')} className="h-16">8</Button>
-          <Button onClick={() => inputNumber('9')} className="h-16">9</Button>
+          <Button onClick={() => inputOperation('−')} variant="operator" className="h-16">−</Button>
+          <Button onClick={() => inputNumber('7')} variant="number" className="h-16">7</Button>
+          <Button onClick={() => inputNumber('8')} variant="number" className="h-16">8</Button>
+          <Button onClick={() => inputNumber('9')} variant="number" className="h-16">9</Button>
 
           {/* Row 5 */}
-          <Button onClick={clear} className="h-16 bg-gray-800 text-white">C</Button>
-          <Button onClick={() => inputNumber('0')} className="h-16">0</Button>
+          <Button onClick={clear} variant="operator" className="h-16">
+            <Undo2 className="w-5 h-5" />
+          </Button>
+          <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
           <Button 
             onClick={calculate} 
             variant="equals"

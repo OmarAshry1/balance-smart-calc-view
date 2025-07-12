@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -46,13 +47,6 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-
-    /* Custom calculator colors - much darker green */
-    --calc-primary: 152 76% 36%;
-    --calc-primary-dark: 152 76% 28%;
-    --calc-secondary: 152 30% 25%;
-    --calc-button: 152 20% 65%;
-    --calc-button-hover: 152 25% 60%;
   }
 
   .dark {
@@ -96,23 +90,42 @@ All colors MUST be HSL.
   }
 }
 
-/* Custom calculator gradient */
-.calc-gradient {
-  background: linear-gradient(135deg, hsl(var(--calc-primary)) 0%, hsl(var(--calc-primary-dark)) 100%);
+/* Mobile-first responsive design */
+@media (min-width: 768px) {
+  .calculator-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
 }
 
-/* Glassmorphism effect for buttons */
-.calc-button {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+/* Ensure proper mobile viewport */
+@viewport {
+  width: device-width;
+  initial-scale: 1;
 }
 
-.calc-button:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+/* Touch-friendly button sizing */
+button {
+  min-height: 44px;
+  min-width: 44px;
 }
 
-.calc-button:active {
-  transform: translateY(0);
+/* Smooth backdrop blur support */
+@supports (backdrop-filter: blur(10px)) {
+  .backdrop-blur-sm {
+    backdrop-filter: blur(10px);
+  }
+  .backdrop-blur-lg {
+    backdrop-filter: blur(20px);
+  }
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(10px)) {
+  .backdrop-blur-sm {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  .backdrop-blur-lg {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
 }
