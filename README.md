@@ -3,7 +3,6 @@
 
 A modern, responsive finance calculator web application built with React, TypeScript, and Tailwind CSS. The app features a beautiful mobile-first design with customizable themes and advanced calculation capabilities.
 
-![Finance Calculator Screenshot](https://via.placeholder.com/400x600?text=Finance+Calculator+Screenshot)
 
 ## 🚀 Features
 
@@ -221,19 +220,22 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Screenshots 📷 (Android)
 ### Home Screen
-![Home screen view](<img width="380" height="847" alt="image" src="https://github.com/user-attachments/assets/d2d68d23-0b7b-47bb-a5a9-cd090dcc5283" />)
+![Home screen view](/screenshots/A1.png)
 ### Calculator
-![Calculator view](<img width="388" height="856" alt="image" src="https://github.com/user-attachments/assets/56e34045-1275-40b4-8456-1dfb87192e0f" />)
+![Calculator view](/screenshots/A2.png)
 ### Settings
-![Settings](<img width="386" height="848" alt="image" src="https://github.com/user-attachments/assets/2b95feeb-02dc-4e0b-8ba1-47f97c3d713f" />)
+![Settings](/screenshots/A3.png)
 
 ## Screenshots 📷 (WebApp)
 ### Home Screen
-![Home screen view](<img width="1918" height="916" alt="image" src="https://github.com/user-attachments/assets/63349531-1092-4fa7-8507-f8943764a223" />)
+![Home screen view](/screenshots/W1.png)
 ### Calculator
-![Calculator view](<img width="1916" height="921" alt="image" src="https://github.com/user-attachments/assets/bc14364b-6b1f-4505-a440-9f0ab90e00d5" />)
+![Calculator view](/screenshots/W2.png)
 ### Settings
-![Settings](<img width="1916" height="913" alt="image" src="https://github.com/user-attachments/assets/695c82bf-a66c-4eaf-9690-24f6c3478e62" />)
+![Settings](/screenshots/W3.png)
+
+## Demo Video 🎥
+https://github.com/OmarAshry1/balance-smart-calc-view/raw/main/demo/Demo.mp4
 ## 📞 Support
 
 For questions, issues, or feature requests:
