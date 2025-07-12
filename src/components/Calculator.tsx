@@ -15,7 +15,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   const [operation, setOperation] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [bgColor, setBgColor] = useState('hsl(152, 76%, 36%)');
+  const [bgColor, setBgColor] = useState('#5dbb85');
 
   const inputNumber = (num: string) => {
     if (waitingForOperand) {
@@ -141,7 +141,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   const resetToOriginal = () => {
-    setBgColor('hsl(152, 76%, 36%)');
+    setBgColor('#5dbb85');
     setShowColorPicker(false);
   };
 
@@ -151,16 +151,21 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     className?: string;
     variant?: 'number' | 'operator' | 'equals' | 'percentage' | 'clear';
   }> = ({ children, onClick, className = '', variant = 'number' }) => {
-    const baseClasses = "rounded-2xl text-xl font-medium transition-all duration-200 active:scale-95 shadow-lg";
+    const baseClasses = "rounded-2xl text-xl font-sf-pro transition-all duration-200 active:scale-95";
     const variantClasses = {
-      number: "bg-green-400/40 backdrop-blur-sm border border-white/30 text-white hover:bg-green-400/50",
-      operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white hover:bg-white/25",
-      equals: "bg-white text-gray-800 shadow-xl hover:bg-gray-100",
-      percentage: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30",
-      clear: "backdrop-blur-sm border border-blue-700/50 text-white hover:opacity-80 flex items-center justify-center"
+      number: "text-white font-sf-pro-thin",
+      operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white font-sf-pro-thin",
+      equals: "bg-white text-gray-800 font-sf-pro-thin",
+      percentage: "bg-white/20 backdrop-blur-sm border border-white/30 text-white font-sf-pro-thin",
+      clear: "backdrop-blur-sm border border-blue-700/50 text-white flex items-center justify-center font-sf-pro-thin"
     };
 
-    const buttonStyle = variant === 'clear' ? { backgroundColor: '#070738' } : {};
+    let buttonStyle = {};
+    if (variant === 'clear') {
+      buttonStyle = { backgroundColor: '#070738' };
+    } else if (variant === 'number') {
+      buttonStyle = { backgroundColor: '#b6dcc6' };
+    }
 
     return (
       <button
@@ -183,8 +188,8 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
 
   return (
     <div 
-      className="min-h-screen flex flex-col relative"
-      style={{ background: `linear-gradient(135deg, ${bgColor}, ${bgColor.replace('36%', '28%')})` }}
+      className="min-h-screen flex flex-col relative font-sf-pro"
+      style={{ backgroundColor: bgColor }}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12 relative z-10">
@@ -199,7 +204,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
           className="p-2 relative"
           onClick={() => setShowColorPicker(!showColorPicker)}
         >
-          <Settings className="w-6 h-6 text-white" />
+          <Settings className="w-6 h-6 text-white fill-white" />
         </button>
       </div>
 
@@ -216,19 +221,19 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
       <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-sm mx-auto w-full">
         {/* Display Area */}
         <div className="text-white mb-8 w-full">
-          <div className="text-lg opacity-75 min-h-[24px] mb-2 text-right">
+          <div className="text-lg opacity-75 min-h-[24px] mb-2 text-right font-sf-pro">
             {formula}
           </div>
-          <div className="text-6xl font-light leading-tight mb-4 text-right">
+          <div className="text-6xl font-light leading-tight mb-4 text-right font-sf-pro">
             {formatDisplay(display)}
           </div>
-          <div className="text-sm opacity-75 text-right">
+          <div className="text-sm opacity-75 text-right font-sf-pro">
             Your balance: ${balance.toLocaleString()} (available)
           </div>
         </div>
 
         {/* Percentage Buttons */}
-        <div className="grid grid-cols-4 gap-3 mb-4 w-full">
+        <div className="grid grid-cols-4 gap-2 mb-2 w-full">
           {[25, 50, 75, 100].map((percent) => (
             <Button
               key={percent}
@@ -242,7 +247,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         </div>
 
         {/* Calculator Grid */}
-        <div className="grid grid-cols-4 gap-3 w-full">
+        <div className="grid grid-cols-4 gap-2 w-full">
           {/* Row 1 */}
           <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
           <Button onClick={inputDecimal} variant="operator" className="h-16">.</Button>
@@ -269,7 +274,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
 
           {/* Row 5 */}
           <Button onClick={clear} variant="clear" className="h-16">
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-8 h-8" />
           </Button>
           <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
           <Button 

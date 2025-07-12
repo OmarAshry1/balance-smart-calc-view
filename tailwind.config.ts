@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,14 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'sf-pro-thin': ['SF Pro Display', 'system-ui', 'sans-serif'],
+				'sf-pro': ['SF Pro Display', 'system-ui', 'sans-serif'],
+			},
+			fontWeight: {
+				'thin': '100',
+				'regular': '400',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
