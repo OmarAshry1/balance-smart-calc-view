@@ -235,7 +235,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ![Settings](/screenshots/W3.png)
 
 ## Demo Video 🎥
-https://github.com/OmarAshry1/balance-smart-calc-view/raw/main/demo/Demo.mp4
+![App Demo](/demo/demo.gif)
 ## 📞 Support
 
 For questions, issues, or feature requests:
