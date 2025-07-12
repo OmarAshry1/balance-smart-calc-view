@@ -1,13 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Settings, ChevronLeft } from 'lucide-react';
 import { ColorPicker } from './ColorPicker';
+import { useNavigate } from 'react-router-dom';
 
 interface CalculatorProps {
   balance?: number;
 }
 
 const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
+  const navigate = useNavigate();
   const [display, setDisplay] = useState('0');
   const [formula, setFormula] = useState('');
   const [previousValue, setPreviousValue] = useState<number | null>(null);
@@ -130,17 +131,20 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   }> = ({ children, onClick, className = '', variant = 'number' }) => {
     const baseClasses = "rounded-2xl text-xl font-medium transition-all duration-200 active:scale-95 shadow-lg";
     const variantClasses = {
-      number: "bg-green-400/30 backdrop-blur-sm border border-white/30 text-white hover:bg-green-400/40",
+      number: "bg-green-400/40 backdrop-blur-sm border border-white/30 text-white hover:bg-green-400/50",
       operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white hover:bg-white/25",
       equals: "bg-white text-gray-800 shadow-xl hover:bg-gray-100",
       percentage: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30",
-      clear: "bg-blue-800 backdrop-blur-sm border border-blue-700/50 text-white hover:bg-blue-700 flex items-center justify-center"
+      clear: "backdrop-blur-sm border border-blue-700/50 text-white hover:opacity-80 flex items-center justify-center"
     };
+
+    const buttonStyle = variant === 'clear' ? { backgroundColor: '#070738' } : {};
 
     return (
       <button
         onClick={onClick}
         className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+        style={buttonStyle}
       >
         {children}
       </button>
@@ -154,7 +158,10 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 pt-12 relative z-10">
-        <button className="p-2">
+        <button 
+          className="p-2"
+          onClick={() => navigate('/')}
+        >
           <ArrowLeft className="w-6 h-6 text-white" />
         </button>
         <h1 className="text-white text-xl font-medium">Calculate</h1>
@@ -178,14 +185,14 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
       {/* Calculator Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-sm mx-auto w-full">
         {/* Display Area */}
-        <div className="text-white text-center mb-8 w-full">
-          <div className="text-lg opacity-75 min-h-[24px] mb-2">
+        <div className="text-white mb-8 w-full">
+          <div className="text-lg opacity-75 min-h-[24px] mb-2 text-right">
             {formula}
           </div>
-          <div className="text-6xl font-light leading-tight mb-4">
+          <div className="text-6xl font-light leading-tight mb-4 text-right">
             {formatDisplay(display)}
           </div>
-          <div className="text-sm opacity-75">
+          <div className="text-sm opacity-75 text-right">
             Your balance: ${balance.toLocaleString()} (available)
           </div>
         </div>
@@ -208,7 +215,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         <div className="grid grid-cols-4 gap-3 w-full">
           {/* Row 1 */}
           <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
-          <Button onClick={inputDecimal} variant="number" className="h-16">.</Button>
+          <Button onClick={inputDecimal} variant="operator" className="h-16">.</Button>
           <Button onClick={() => inputOperation('(')} variant="operator" className="h-16">(</Button>
           <Button onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
 
