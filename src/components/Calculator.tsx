@@ -173,6 +173,18 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
       buttonStyle = { backgroundColor: '#ffffff65' };
     }
 
+    return (
+      <button
+        onClick={onClick}
+        className={`${baseClasses} ${variantClasses[variant]} ${className}`}
+        style={buttonStyle}
+      >
+        {children}
+      </button>
+    );
+  };
+
+  const GearIcon = () => (
     <svg 
       width="24" 
       height="24" 
