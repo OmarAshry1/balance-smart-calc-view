@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Settings, Undo2 } from 'lucide-react';
+import { ArrowLeft, Settings, ChevronLeft } from 'lucide-react';
 import { ColorPicker } from './ColorPicker';
 
 interface CalculatorProps {
@@ -126,14 +126,15 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     children: React.ReactNode;
     onClick: () => void;
     className?: string;
-    variant?: 'number' | 'operator' | 'equals' | 'percentage';
+    variant?: 'number' | 'operator' | 'equals' | 'percentage' | 'clear';
   }> = ({ children, onClick, className = '', variant = 'number' }) => {
     const baseClasses = "rounded-2xl text-xl font-medium transition-all duration-200 active:scale-95 shadow-lg";
     const variantClasses = {
-      number: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30",
+      number: "bg-green-400/30 backdrop-blur-sm border border-white/30 text-white hover:bg-green-400/40",
       operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white hover:bg-white/25",
       equals: "bg-white text-gray-800 shadow-xl hover:bg-gray-100",
-      percentage: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
+      percentage: "bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30",
+      clear: "bg-blue-800 backdrop-blur-sm border border-blue-700/50 text-white hover:bg-blue-700 flex items-center justify-center"
     };
 
     return (
@@ -190,7 +191,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         </div>
 
         {/* Percentage Buttons */}
-        <div className="grid grid-cols-4 gap-3 mb-6 w-full">
+        <div className="grid grid-cols-4 gap-3 mb-4 w-full">
           {[25, 50, 75, 100].map((percent) => (
             <Button
               key={percent}
@@ -230,8 +231,8 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
           <Button onClick={() => inputNumber('9')} variant="number" className="h-16">9</Button>
 
           {/* Row 5 */}
-          <Button onClick={clear} variant="operator" className="h-16">
-            <Undo2 className="w-5 h-5" />
+          <Button onClick={clear} variant="clear" className="h-16">
+            <ChevronLeft className="w-5 h-5" />
           </Button>
           <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
           <Button 
