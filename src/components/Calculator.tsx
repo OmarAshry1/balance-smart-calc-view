@@ -15,7 +15,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   const [operation, setOperation] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [bgColor, setBgColor] = useState('#5dbb85');
+  const [bgColor, setBgColor] = useState('hsl(152, 76%, 36%)');
 
   const inputNumber = (num: string) => {
     if (waitingForOperand) {
@@ -141,7 +141,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   };
 
   const resetToOriginal = () => {
-    setBgColor('#5dbb85');
+    setBgColor('hsl(152, 76%, 36%)');
     setShowColorPicker(false);
   };
 
@@ -164,7 +164,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     if (variant === 'clear') {
       buttonStyle = { backgroundColor: '#070738' };
     } else if (variant === 'number') {
-      buttonStyle = { backgroundColor: '#b6dcc6' };
+      buttonStyle = { backgroundColor: '#ffffff73' };
     }
 
     return (

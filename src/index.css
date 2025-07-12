@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -47,6 +46,10 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --calculator-bg: hsl(152, 76%, 36%);
+    --button-text: hsl(0, 0%, 100%);
+    --equals-button: hsl(240, 82%, 12%);
   }
 
   .dark {
