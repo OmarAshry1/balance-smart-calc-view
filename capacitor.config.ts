@@ -6,8 +6,13 @@ const config: CapacitorConfig = {
   appName: 'balance-smart-calc-view',
   webDir: 'dist',
   server: {
-    url: 'https://de38363b-9893-4e4a-97de-7a41242ad091.lovableproject.com?forceHideBadge=true',
-    cleartext: true
+    androidScheme: 'https',
+   // url: 'https://de38363b-9893-4e4a-97de-7a41242ad091.lovableproject.com?forceHideBadge=true',
+    cleartext: true,
+    allowNavigation: ['*']
+  },
+  android: {
+    allowMixedContent: true,  
   },
   plugins: {
     SplashScreen: {

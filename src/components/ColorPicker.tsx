@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RotateCcw } from 'lucide-react';
 
@@ -24,12 +23,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ onColorSelect, onReset
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/20 z-20"
+        className="fixed inset-0 bg-black/20 transition-opacity duration-300"
         onClick={onClose}
       />
       
-      {/* Color Picker Modal */}
-      <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl z-30 min-w-[280px]">
+      {/* Color Picker */}
+      <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl z-30 min-w-[280px] color-picker-transition animate-in fade-in-0 zoom-in-95">
         <h3 className="text-gray-800 font-medium mb-3">Background Color</h3>
         
         {/* Reset Button */}

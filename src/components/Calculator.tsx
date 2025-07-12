@@ -16,6 +16,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [bgColor, setBgColor] = useState('hsl(152, 76%, 36%)');
+  const [animateResult, setAnimateResult] = useState(false);
 
   const inputNumber = (num: string) => {
     if (waitingForOperand) {
@@ -151,7 +152,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     className?: string;
     variant?: 'number' | 'operator' | 'equals' | 'percentage' | 'clear';
   }> = ({ children, onClick, className = '', variant = 'number' }) => {
-    const baseClasses = "rounded-2xl text-xl font-sf-pro transition-all duration-200 active:scale-95";
+    const baseClasses = "rounded-2xl text-xl font-sf-pro button-hover";
     const variantClasses = {
       number: "text-white font-sf-pro-thin",
       operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white font-sf-pro-thin",
@@ -186,40 +187,74 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     return openParenCount > closeParenCount ? ')' : '(';
   };
 
+  const handleButtonPress = (value: string) => {
+    switch (value) {
+      case '=':
+        try {
+          setAnimateResult(true);
+          const result = eval(formula);
+          setDisplay(result.toString());
+          setFormula('');
+          setTimeout(() => setAnimateResult(false), 300);
+        } catch (error) {
+          setDisplay('Error');
+        }
+        break;
+      default:
+        if (display === '0' && !isNaN(Number(value))) {
+          setDisplay(value);
+          setFormula(value);
+        } else {
+          setDisplay(prev => prev + value);
+          setFormula(prev => prev + value);
+        }
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (display !== '0') {
+      setAnimateResult(true);
+      const timer = setTimeout(() => setAnimateResult(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [display]);
+
   return (
     <div 
       className="min-h-screen flex flex-col relative font-sf-pro"
       style={{ backgroundColor: bgColor }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12 relative z-10">
-        <button 
-          className="p-2"
-          onClick={() => navigate('/')}
-        >
-          <ArrowLeft className="w-6 h-6 text-white" />
-        </button>
-        <h1 className="text-white text-xl font-medium">Calculate</h1>
-        <button 
-          className="p-2 relative"
-          onClick={() => setShowColorPicker(!showColorPicker)}
-        >
-          <Settings className="w-6 h-6 text-white fill-white" />
-        </button>
-      </div>
+      <div className="page-transition">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 pt-12">
+          <button 
+            onClick={() => navigate('/')}
+            className="p-2 icon-hover"
+          >
+            <ArrowLeft className="w-6 h-6 text-white" />
+          </button>
+          <h1 className="text-white text-xl font-medium">Calculate</h1>
+          <button 
+            onClick={() => setShowColorPicker(!showColorPicker)}
+            className="p-2 icon-hover"
+          >
+            <Settings className="w-6 h-6 text-white" />
+          </button>
+        </div>
 
-      {/* Color Picker Dropdown */}
-      {showColorPicker && (
-        <ColorPicker
-          onColorSelect={handleColorSelect}
-          onReset={resetToOriginal}
-          onClose={() => setShowColorPicker(false)}
-        />
-      )}
+        {/* Color Picker Dropdown */}
+        {showColorPicker && (
+          <ColorPicker
+            onColorSelect={handleColorSelect}
+            onReset={resetToOriginal}
+            onClose={() => setShowColorPicker(false)}
+          />
+        )}
 
-      {/* Calculator Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-sm mx-auto w-full">
-        {/* Display Area */}
+        {/* Calculator Content */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-sm mx-auto w-full">
+           {/* Display Area */}
         <div className="text-white mb-8 w-full">
           <div className="text-lg opacity-75 min-h-[24px] mb-2 text-right font-sf-pro">
             {formula}
@@ -232,58 +267,59 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
           </div>
         </div>
 
-        {/* Percentage Buttons */}
-        <div className="grid grid-cols-4 gap-2 mb-2 w-full">
-          {[25, 50, 75, 100].map((percent) => (
-            <Button
-              key={percent}
-              onClick={() => applyPercentage(percent)}
-              className="h-12"
-              variant="percentage"
-            >
-              {percent}%
+          {/* Percentage Buttons */}
+          <div className="grid grid-cols-4 gap-2 mb-2 w-full">
+            {[25, 50, 75, 100].map((percent) => (
+              <Button
+                key={percent}
+                onClick={() => applyPercentage(percent)}
+                className="h-12"
+                variant="percentage"
+              >
+                {percent}%
+              </Button>
+            ))}
+          </div>
+
+          {/* Calculator Grid */}
+          <div className="grid grid-cols-4 gap-2 w-full">
+            {/* Row 1 */}
+            <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
+            <Button onClick={inputDecimal} variant="operator" className="h-16">.</Button>
+            <Button onClick={inputParentheses} variant="operator" className="h-16">( )</Button>
+            <Button onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
+
+            {/* Row 2 */}
+            <Button onClick={() => inputOperation('*')} variant="operator" className="h-16">*</Button>
+            <Button onClick={() => inputNumber('1')} variant="number" className="h-16">1</Button>
+            <Button onClick={() => inputNumber('2')} variant="number" className="h-16">2</Button>
+            <Button onClick={() => inputNumber('3')} variant="number" className="h-16">3</Button>
+
+            {/* Row 3 */}
+            <Button onClick={() => inputOperation('+')} variant="operator" className="h-16">+</Button>
+            <Button onClick={() => inputNumber('4')} variant="number" className="h-16">4</Button>
+            <Button onClick={() => inputNumber('5')} variant="number" className="h-16">5</Button>
+            <Button onClick={() => inputNumber('6')} variant="number" className="h-16">6</Button>
+
+            {/* Row 4 */}
+            <Button onClick={() => inputOperation('−')} variant="operator" className="h-16">−</Button>
+            <Button onClick={() => inputNumber('7')} variant="number" className="h-16">7</Button>
+            <Button onClick={() => inputNumber('8')} variant="number" className="h-16">8</Button>
+            <Button onClick={() => inputNumber('9')} variant="number" className="h-16">9</Button>
+
+            {/* Row 5 */}
+            <Button onClick={clear} variant="clear" className="h-16">
+              <ChevronLeft className="w-8 h-8" />
             </Button>
-          ))}
-        </div>
-
-        {/* Calculator Grid */}
-        <div className="grid grid-cols-4 gap-2 w-full">
-          {/* Row 1 */}
-          <Button onClick={() => inputOperation('/')} variant="operator" className="h-16">/</Button>
-          <Button onClick={inputDecimal} variant="operator" className="h-16">.</Button>
-          <Button onClick={inputParentheses} variant="operator" className="h-16">( )</Button>
-          <Button onClick={() => inputOperation('%')} variant="operator" className="h-16">%</Button>
-
-          {/* Row 2 */}
-          <Button onClick={() => inputOperation('*')} variant="operator" className="h-16">*</Button>
-          <Button onClick={() => inputNumber('1')} variant="number" className="h-16">1</Button>
-          <Button onClick={() => inputNumber('2')} variant="number" className="h-16">2</Button>
-          <Button onClick={() => inputNumber('3')} variant="number" className="h-16">3</Button>
-
-          {/* Row 3 */}
-          <Button onClick={() => inputOperation('+')} variant="operator" className="h-16">+</Button>
-          <Button onClick={() => inputNumber('4')} variant="number" className="h-16">4</Button>
-          <Button onClick={() => inputNumber('5')} variant="number" className="h-16">5</Button>
-          <Button onClick={() => inputNumber('6')} variant="number" className="h-16">6</Button>
-
-          {/* Row 4 */}
-          <Button onClick={() => inputOperation('−')} variant="operator" className="h-16">−</Button>
-          <Button onClick={() => inputNumber('7')} variant="number" className="h-16">7</Button>
-          <Button onClick={() => inputNumber('8')} variant="number" className="h-16">8</Button>
-          <Button onClick={() => inputNumber('9')} variant="number" className="h-16">9</Button>
-
-          {/* Row 5 */}
-          <Button onClick={clear} variant="clear" className="h-16">
-            <ChevronLeft className="w-8 h-8" />
-          </Button>
-          <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
-          <Button 
-            onClick={calculate} 
-            variant="equals"
-            className="h-16 col-span-2"
-          >
-            =
-          </Button>
+            <Button onClick={() => inputNumber('0')} variant="number" className="h-16">0</Button>
+            <Button 
+              onClick={calculate} 
+              variant="equals"
+              className="h-16 col-span-2"
+            >
+              =
+            </Button>
+          </div>
         </div>
       </div>
     </div>

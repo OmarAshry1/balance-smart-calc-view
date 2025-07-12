@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">balance-smart-calc-view</string>
+    <string name="title_activity_main">balance-smart-calc-view</string>
+    <string name="package_name">app.lovable.de38363b98934e4a97de7a41242ad091</string>
+    <string name="custom_url_scheme">app.lovable.de38363b98934e4a97de7a41242ad091</string>
+</resources>
