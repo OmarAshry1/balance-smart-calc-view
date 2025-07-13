@@ -187,17 +187,111 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     return openParenCount > closeParenCount ? ')' : '(';
   };
 
+  // Safe mathematical expression evaluator
+  const evaluateExpression = (expr: string): number => {
+    // Remove whitespace and validate input
+    const cleanExpr = expr.replace(/\s/g, '');
+    
+    // Validate that expression only contains allowed characters
+    const allowedChars = /^[0-9+\-*/.()%]+$/;
+    if (!allowedChars.test(cleanExpr)) {
+      throw new Error('Invalid characters in expression');
+    }
+    
+    // Replace − with standard minus sign
+    const normalizedExpr = cleanExpr.replace(/−/g, '-');
+    
+    // Simple recursive descent parser for basic math expressions
+    let index = 0;
+    
+    const parseNumber = (): number => {
+      let numStr = '';
+      while (index < normalizedExpr.length && /[0-9.]/.test(normalizedExpr[index])) {
+        numStr += normalizedExpr[index++];
+      }
+      return parseFloat(numStr) || 0;
+    };
+    
+    const parseFactor = (): number => {
+      if (normalizedExpr[index] === '(') {
+        index++; // skip '('
+        const result = parseExpression();
+        index++; // skip ')'
+        return result;
+      }
+      
+      if (normalizedExpr[index] === '-') {
+        index++; // skip '-'
+        return -parseFactor();
+      }
+      
+      if (normalizedExpr[index] === '+') {
+        index++; // skip '+'
+        return parseFactor();
+      }
+      
+      return parseNumber();
+    };
+    
+    const parseTerm = (): number => {
+      let result = parseFactor();
+      
+      while (index < normalizedExpr.length && /[*/%]/.test(normalizedExpr[index])) {
+        const operator = normalizedExpr[index++];
+        const factor = parseFactor();
+        
+        if (operator === '*') {
+          result *= factor;
+        } else if (operator === '/') {
+          if (factor === 0) throw new Error('Division by zero');
+          result /= factor;
+        } else if (operator === '%') {
+          result %= factor;
+        }
+      }
+      
+      return result;
+    };
+    
+    const parseExpression = (): number => {
+      let result = parseTerm();
+      
+      while (index < normalizedExpr.length && /[+-]/.test(normalizedExpr[index])) {
+        const operator = normalizedExpr[index++];
+        const term = parseTerm();
+        
+        if (operator === '+') {
+          result += term;
+        } else if (operator === '-') {
+          result -= term;
+        }
+      }
+      
+      return result;
+    };
+    
+    const result = parseExpression();
+    
+    // Ensure we've consumed the entire expression
+    if (index < normalizedExpr.length) {
+      throw new Error('Invalid expression syntax');
+    }
+    
+    return result;
+  };
+
   const handleButtonPress = (value: string) => {
     switch (value) {
       case '=':
         try {
           setAnimateResult(true);
-          const result = eval(formula);
+          const result = evaluateExpression(formula);
           setDisplay(result.toString());
           setFormula('');
           setTimeout(() => setAnimateResult(false), 300);
         } catch (error) {
           setDisplay('Error');
+          setFormula('');
         }
         break;
       default:
