@@ -3,6 +3,8 @@
 - URL: https://balance-smart-calc-view.lovable.app
 - A modern, responsive finance calculator web application built with React, TypeScript, and Tailwind CSS. The app features a beautiful mobile-first design with customizable themes and advanced calculation capabilities.
 
+## Demo Video 🎥
+![App Demo](/demo/demo.gif)
 
 ## 🚀 Features
 
@@ -234,8 +236,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### Settings
 ![Settings](/screenshots/W3.png)
 
-## Demo Video 🎥
-![App Demo](/demo/demo.gif)
 ## 📞 Support
 
 For questions, issues, or feature requests:
