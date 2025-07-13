@@ -152,7 +152,7 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
     className?: string;
     variant?: 'number' | 'operator' | 'equals' | 'percentage' | 'clear';
   }> = ({ children, onClick, className = '', variant = 'number' }) => {
-    const baseClasses = "rounded-2xl text-xl font-sf-pro button-hover";
+    const baseClasses = "rounded-2xl text-xl font-sf-pro transition-transform duration-200 hover:scale-105";
     const variantClasses = {
       number: "text-white font-sf-pro-thin",
       operator: "bg-white/15 backdrop-blur-sm border border-white/25 text-white font-sf-pro-thin",
@@ -230,14 +230,14 @@ const Calculator: React.FC<CalculatorProps> = ({ balance = 24757.22 }) => {
         <div className="flex items-center justify-between p-4 pt-12">
           <button 
             onClick={() => navigate('/')}
-            className="p-2 icon-hover"
+            className="p-2 transition-transform duration-200 hover:scale-105"
           >
             <ArrowLeft className="w-6 h-6 text-white" />
           </button>
           <h1 className="text-white text-xl font-medium">Calculate</h1>
           <button 
             onClick={() => setShowColorPicker(!showColorPicker)}
-            className="p-2 icon-hover"
+            className="p-2 transition-transform duration-200 hover:scale-105"
           >
             <Settings className="w-6 h-6 text-white" />
           </button>
